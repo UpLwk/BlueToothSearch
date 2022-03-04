@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeqifu.sys.entity.User;
 import com.yeqifu.sys.mapper.RoleMapper;
+
 import com.yeqifu.sys.mapper.UserMapper;
 import com.yeqifu.sys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.Serializable;
 import java.util.List;
 

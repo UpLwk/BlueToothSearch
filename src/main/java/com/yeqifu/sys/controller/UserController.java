@@ -65,21 +65,7 @@ public class UserController {
 
         //将所有用户数据放入list中
         List<User> list = page.getRecords();
-        for (User user : list) {
-            Integer deptId = user.getDeptid();
-            if (deptId!=null){
-                //先从缓存中去取，如果缓存中没有就去数据库中取
-                Dept one = deptService.getById(deptId);
-                //设置user的部门名称
-                user.setDeptname(one.getName());
-            }
-            Integer mgr = user.getMgr();
-            if (mgr!=null&&mgr!=0){
-                User one = userService.getById(mgr);
-                //设置user的领导名称
-                user.setLeadername(one.getName());
-            }
-        }
+
         return new DataGridView(page.getTotal(),list);
     }
 

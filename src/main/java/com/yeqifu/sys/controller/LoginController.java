@@ -40,6 +40,7 @@ public class LoginController {
 
         //获得存储在session中的验证码
         String sessionCode = (String) session.getAttribute("code");
+
         if (code!=null&&sessionCode.equals(code)){
             Subject subject = SecurityUtils.getSubject();
             AuthenticationToken token = new UsernamePasswordToken(userVo.getLoginname(),userVo.getPwd());

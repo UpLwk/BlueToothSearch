@@ -568,12 +568,12 @@ h2.method {
 }
 
 .loginBody {
-    background: url("../images/login_bg.jpg") no-repeat center center;
+    background: url("../images/beijingtu.jpg") no-repeat center center;
 }
 
 .loginBody form.layui-form {
     padding: 0 20px;
-    width: 300px;
+    width: 380px;
     height: 335px;
     position: absolute;
     left: 50%;
@@ -588,6 +588,7 @@ h2.method {
     -moz-border-radius: 5px;
     border-radius: 5px;
     box-shadow: 0 0 50px #009688;
+    opacity: 0.7;
 }
 
 .login_face {

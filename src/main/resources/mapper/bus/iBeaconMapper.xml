@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeqifu.bus.mapper.iBeaconMapper">
+    <select id="getRssiListTop_10"  resultType="com.yeqifu.bus.entity.iBeaconInfo">
+        SELECT * FROM bluerssi_form ORDER BY scandate desc LIMIT 10
+    </select>
+
+    <insert id="saveOrUpdateBatchBlueRssi" >
+        insert into bluerssi_form
+        (gatewayMac, rssi, topic, ibeaconMajor, ibeaconMinor, ibeaconuuid, scandate, iBeaconName, mac)
+        VALUES
+        <foreach collection="list" index="index" item = "item" separator=",">
+            (
+            #{item.gatewayMac},
+            #{item.rssi},
+            #{item.topic},
+            #{item.ibeaconMajor},
+            #{item.ibeaconMinor},
+            #{item.ibeaconuuid},
+            #{item.scandate},
+            #{item.iBeaconName},
+            #{item.mac}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -75,4 +75,13 @@ public class BusinessController {
         return "business/salesback/salesbackManager";
     }
 
+    /**
+     * 跳转到商品销售管理页面
+     * @return
+     */
+    @RequestMapping("toSearchiBeaconManager")
+    public String toSearchiBeaconManager(){
+        return "business/ibeacon/searchiBeaconManager";
+    }
+
 }

@@ -109,7 +109,9 @@
     </div>
 </form>
 
-<!--数据表格-->
+
+<!--
+数据表格
 <div>
     <table class="layui-hide" id="inportTable" lay-filter="inportTable"></table>
     <div id="inportToolBar" style="display: none">
@@ -119,7 +121,7 @@
     </div>
     <div id="inportRowBar" style="display: none;">
         <button type="button" lay-event="update" shiro:hasPermission="inport:update" class="layui-btn layui-btn-sm layui-btn-radius"><i
-                class="layui-icon layui-icon-edit"></i>编辑
+                class="layui-icon layui-icon-edit"></i>确认入库
         </button>
         <button type="button" lay-event="delete" shiro:hasPermission="inport:delete" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius"><i
                 class="layui-icon layui-icon-delete"></i>删除
@@ -129,7 +131,7 @@
         </button>
     </div>
 </div>
-
+-->
 <!--添加和修改弹出层-->
 <div id="addOrUpdateDiv" style="display: none;padding: 10px;padding-right: 5%">
     <form action="" method="post" class="layui-form" id="dataFrm" lay-filter="dataFrm">
@@ -271,8 +273,8 @@
                 {field: 'id', title: 'ID', align: 'center',width:'50'},
                 {field: 'providername', title: '供应商', align: 'center',width:'100'},
                 {field: 'goodsname', title: '商品名称', align: 'center',width:'150'},
-                {field: 'paytype', title: '支付类型', align: 'center',width:'90'},
-                {field: 'inporttime', title: '进货时间', align: 'center',width:'170'},
+                {field: 'paytype', title: 'iBeacon标识', align: 'center',width:'170'},
+                {field: 'inporttime', title: '扫描时间', align: 'center',width:'170'},
                 {field: 'operateperson', title: '操作员', align: 'center',width:'130'},
                 {field: 'number', title: '进货数量', align: 'center',width:'100'},
                 {field: 'size', title: '商品规格', align: 'center',width:'100'},

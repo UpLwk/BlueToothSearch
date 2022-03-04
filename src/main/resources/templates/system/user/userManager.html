@@ -47,13 +47,6 @@
 </fieldset>
 <form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form">
     <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">所属部门</label>
-            <div class="layui-input-inline">
-                <input type="hidden" name="deptid" id="search_deptid">
-                <ul id="search_deptTree" class="dtree" data-id="0"></ul>
-            </div>
-        </div>
 
         <div class="layui-inline">
             <label class="layui-form-label">用户名</label>
@@ -100,8 +93,8 @@
         <button type="button" lay-event="resetPwd" shiro:hasPermission="user:resetPwd" class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius"><i
                 class="layui-icon layui-icon-delete"></i>重置密码
         </button>
-        <button type="button" lay-event="selectRole" shiro:hasPermission="user:selectRole" class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius"><i
-                class="layui-icon layui-icon-delete"></i>分配角色
+        <button type="button" lay-event="selectRole" shiro:hasPermission="user:selectRole" class="layui-btn layui-btn-xs layui-btn-warm layui-btn-radius"><i
+                class="layui-icon layui-icon-username"></i>分配角色
         </button>
     </div>
 </div>
@@ -111,32 +104,9 @@
     <form action="" method="post" class="layui-form" id="dataFrm" lay-filter="dataFrm">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">所属部门</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="deptid" id="deptid">
-                    <ul id="deptTree" class="dtree" data-id="0"></ul>
-                </div>
-            </div>
-            <div class="layui-inline">
                 <label class="layui-form-label">入职时间</label>
                 <div class="layui-input-block">
                     <input type="text" name="hiredate" id="hiredate" lay-verify="required" placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" style="width: 217px" class="layui-input input-radius">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">领导部门</label>
-                <div class="layui-input-block">
-                    <ul id="leaderdeptTree" class="dtree" data-id="0"></ul>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">直属领导</label>
-                <div class="layui-input-block">
-                    <select name="mgr" id="mgr">
-                        <option value="">请选择直属领导</option>
-                    </select>
                 </div>
             </div>
         </div>
@@ -251,26 +221,24 @@
             cols: [ [
                 {field: 'id', title: 'ID', align: 'center', width: '50'},
                 {field: 'name', title: '用户名', align: 'center', width: '130'},
-                {field: 'loginname', title: '登陆名称', align: 'center', width: '130'},
-                {field: 'deptname', title: '所属部门', align: 'center', width: '130'},
-                {field: 'leadername', title: '直属领导', align: 'center', width: '120'},
+                {field: 'loginname', title: 'iBeacon_Mac', align: 'center', width: '150'},
                 {field: 'remark', title: '用户备注', align: 'center', width: '120'},
                 {field: 'address', title: '用户地址', align: 'center', width: '100'},
-                {field: 'hiredate', title: '入职时间', align: 'center', width: '160'},
-                {field: 'imgpath', title: '用户头像', align: 'center', width: '160', templet:function(d){
-                        return '<img width=40 height=40 src=/file/showImageByPath?path='+d.imgpath+ ' />';
-                }},
+                {field: 'hiredate', title: '扫描时间', align: 'center', width: '160'},
+              //  {field: 'imgpath', title: '用户头像', align: 'center', width: '160', templet:function(d){
+               //         return '<img width=40 height=40 src=/file/showImageByPath?path='+d.imgpath+ ' />';
+              //  }},
                 {
-                    field: 'sex', title: '是否可用', align: 'center', width: '100', templet: function (d) {
-                    return d.sex == 1 ? '<font color="blue">男</font>' : '<font color="red">女</font>';
+                    field: 'sex', title: '是否签到', align: 'center', width: '100', templet: function (d) {
+                    return d.sex == 1 ? '<font color="blue">是</font>' : '<font color="red">否</font>';
                 }
                 },
                 {
-                    field: 'available', title: '是否可用', align: 'center', width: '100', templet: function (d) {
-                    return d.available == 1 ? '<font color="blue">可用</font>' : '<font color="red">不可用</font>';
+                    field: 'available', title: '是否在职', align: 'center', width: '100', templet: function (d) {
+                    return d.available == 1 ? '<font color="blue">在职</font>' : '<font color="red">不在职</font>';
                 }
                 },
-                {field: 'ordernum', title: '排序码', align: 'center', width: '80'},
+                //{field: 'ordernum', title: '排序码', align: 'center', width: '80'},
                 {fixed: 'right', title: '操作', toolbar: '#userRowBar', align: 'center', width: '330'}
             ] ],
             done: function (data, curr, count) {

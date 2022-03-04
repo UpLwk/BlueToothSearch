@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * <p>
@@ -65,7 +66,42 @@ public class GoodsController {
         }
         return new DataGridView(page.getTotal(),page.getRecords());
     }
-
+    /**
+     * 查询商品
+     * @param goodsVo
+     * @return
+     */
+    @RequestMapping("loadRandomGoods")
+    public DataGridView loadRandomGoods(GoodsVo goodsVo){
+        IPage<Goods> page = new Page<Goods>(goodsVo.getPage(),goodsVo.getLimit());
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<Goods>();
+        queryWrapper.eq(goodsVo.getProviderid()!=null&&goodsVo.getProviderid()!=0,"providerid",goodsVo.getProviderid());
+        queryWrapper.like(StringUtils.isNotBlank(goodsVo.getGoodsname()),"goodsname",goodsVo.getGoodsname());
+        queryWrapper.like(StringUtils.isNotBlank(goodsVo.getProductcode()),"productcode",goodsVo.getProductcode());
+        queryWrapper.like(StringUtils.isNotBlank(goodsVo.getPromitcode()),"promitcode",goodsVo.getPromitcode());
+        queryWrapper.like(StringUtils.isNotBlank(goodsVo.getDescription()),"description",goodsVo.getDescription());
+        queryWrapper.like(StringUtils.isNotBlank(goodsVo.getSize()),"size",goodsVo.getSize());
+        Random r = new Random();
+        int seed = r.nextInt(5);
+        if (seed == 1){
+            queryWrapper.orderByDesc("id");
+        }else if (seed == 2){
+            queryWrapper.orderByDesc("size");
+        }else if (seed == 3){
+            queryWrapper.orderByAsc("id");
+        }else{
+            queryWrapper.orderByAsc("providerid");
+        }
+        goodsService.page(page,queryWrapper);
+        List<Goods> records = page.getRecords();
+        for (Goods goods : records) {
+            Provider provider = providerService.getById(goods.getProviderid());
+            if (null!=provider){
+                goods.setProvidername(provider.getProvidername());
+            }
+        }
+        return new DataGridView(page.getTotal(),page.getRecords());
+    }
     /**
      * 添加商品
      * @param goodsVo

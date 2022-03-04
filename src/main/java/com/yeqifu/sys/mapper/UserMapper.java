@@ -2,6 +2,7 @@ package com.yeqifu.sys.mapper;
 
 import com.yeqifu.sys.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @author luoyi-
  * @since 2019-11-21
  */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 
