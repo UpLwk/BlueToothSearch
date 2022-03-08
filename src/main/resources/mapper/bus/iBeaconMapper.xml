@@ -23,4 +23,14 @@
             )
         </foreach>
     </insert>
+
+
+    <select id="queryGoodsBoard"  resultType="com.yeqifu.bus.entity.GoodsBoard">
+        select partitionone,waresum,date from bus_goods_statis
+    </select>
+
+
+    <select id="queryGateWayBoard"  resultType="com.yeqifu.bus.entity.GateWayBoard">
+        select gateWayG1,date from gateway_board
+    </select>
 </mapper>

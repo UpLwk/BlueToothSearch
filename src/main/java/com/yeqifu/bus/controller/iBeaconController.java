@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yeqifu.bus.entity.Goods;
-import com.yeqifu.bus.entity.Provider;
-import com.yeqifu.bus.entity.iBeaconInfo;
+import com.yeqifu.bus.entity.*;
 import com.yeqifu.bus.server.ClientMQTT;
 import com.yeqifu.bus.service.IGoodsService;
 import com.yeqifu.bus.service.IProviderService;
@@ -19,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -65,6 +64,34 @@ public class iBeaconController {
 
         ClientMQTT clientMQTT = new ClientMQTT();
         clientMQTT.searchBlueToothData();
+        return new DataGridView(page.getTotal(),page.getRecords());
+    }
+
+    @RequestMapping("findGoodsNum")
+    public DataGridView findGoods(iBeaconInfo ibeacon){
+        IPage<Board> page = new Page<Board>(1,10);
+        QueryWrapper<iBeaconInfo> queryWrapper = new QueryWrapper<iBeaconInfo>();
+        Board board = new Board();
+        //添加货物
+        ArrayList<GoodsBoard> goodsBoards = (ArrayList<GoodsBoard>) iBeaconService.queryGoodsBoard();
+        board.setGoodslist(goodsBoards);
+
+
+        //添加网关移盘表信息
+        List<GateWayBoard> gateWayBoards = iBeaconService.queryGateWay();
+        board.setGateWayBoards((ArrayList<GateWayBoard>) gateWayBoards);
+
+        board.setOnlineiBeaconNum(10);
+        board.setOfflineiBeaconNum(0);
+
+        board.setSignInUser(7);
+        board.setOfflineUser(2);
+
+        board.setOnlinegateway(6);
+        board.setOfflinegateway(0);
+        ArrayList list = new ArrayList();
+        list.add(board);
+        page.setRecords(list);
         return new DataGridView(page.getTotal(),page.getRecords());
     }
 }

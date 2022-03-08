@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yeqifu.bus.entity.GateWayBoard;
+import com.yeqifu.bus.entity.GoodsBoard;
 import com.yeqifu.bus.entity.iBeaconInfo;
 import com.yeqifu.bus.mapper.iBeaconMapper;
 import com.yeqifu.bus.service.IiBeaconService;
@@ -129,6 +131,20 @@ public class iBeaconServiceImpl extends ServiceImpl<iBeaconMapper, iBeaconInfo> 
     @Override
     public List<iBeaconInfo> queryBlueRssiTop_10() {
         return iBeaconMapper.getRssiListTop_10();
+    }
+
+    /**
+     *移盘表
+     */
+
+    @Override
+    public List<GoodsBoard> queryGoodsBoard() {
+        return iBeaconMapper.queryGoodsBoard();
+    }
+
+    @Override
+    public List<GateWayBoard> queryGateWay() {
+        return iBeaconMapper.queryGateWayBoard();
     }
 }
 

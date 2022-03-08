@@ -1,6 +1,8 @@
 package com.yeqifu.bus.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yeqifu.bus.entity.GateWayBoard;
+import com.yeqifu.bus.entity.GoodsBoard;
 import com.yeqifu.bus.entity.iBeaconInfo;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,4 +12,8 @@ public interface iBeaconMapper extends BaseMapper<iBeaconInfo> {
     List<iBeaconInfo> getRssiListTop_10();
 
     public int saveOrUpdateBatchBlueRssi(@Param("list") List<iBeaconInfo> list);
+
+    List<GoodsBoard> queryGoodsBoard();
+
+    List<GateWayBoard> queryGateWayBoard();
 }
