@@ -84,4 +84,10 @@ public class BusinessController {
         return "business/ibeacon/searchiBeaconManager";
     }
 
+
+    @RequestMapping("toLocationManager")
+    public String toLocationManager(){
+        return "business/location/locationManager";
+    }
+
 }

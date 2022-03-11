@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,11 +32,14 @@ public class ImageDTO implements Serializable {
 
     private String title;
 
-    private String content;
+    private String text;
 
-    private Date createtime;
+    private Color color;
 
-    private String opername;
+    private Font font;
 
+    //坐标
+    private int x;
 
+    private int y;
 }
