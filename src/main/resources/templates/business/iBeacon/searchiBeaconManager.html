@@ -97,11 +97,11 @@
                     class="layui-icon layui-icon-refresh"></i><span>重置</span>
             </button>
 
-            <button type="button" class="layui-btn layui-btn-radius layui-btn-warm2"><i
+            <button type="button" class="layui-btn layui-btn-radius layui-btn-warm2" onclick="startGather()"><i
                     class="layui-icon layui-icon-engine"></i><span>开始收集</span>
             </button>
 
-            <button type="button" class="layui-btn layui-btn-radius layui-btn-warm3"><i
+            <button type="button" class="layui-btn layui-btn-radius layui-btn-warm3" onclick="stopGather()"><i
                     class="layui-icon layui-icon-pause"></i><span>停止收集</span>
             </button>
         </div>
@@ -232,9 +232,9 @@
 
     //提升数据表格的作用域，因为底下还有一个reloadTable方法
     var tableIns;
-
     var timer1=null,timer2=null;
-    layui.use(['jquery', 'form', 'layer', 'table','upload'], function () {
+    var startGather, stopGather;
+    layui.use(['jquery', 'form', 'layer', 'table','upload','element'], function () {
         var $ = layui.jquery;
         var form = layui.form;
         var layer = layui.layer;
@@ -261,8 +261,8 @@
                 {field: 'dangernum', title: 'iBeacon电量', align: 'center',width:'150'},
                 {field: 'goodsimg', title: '商品图片', align: 'center',width:'150'},
                 {field: 'available', title: '是否可用', align: 'center',width:'100',templet:function (d) {
-                    return d.available!=1?'<font color="blue">可用</font>':'<font color="red">不可用</font>';
-                }},
+                        return d.available!=1?'<font color="blue">可用</font>':'<font color="red">不可用</font>';
+                    }},
                 {fixed: 'right', title: '操作', toolbar: '#goodsRowBar', align: 'center',width:'180'}
             ] ],
             done: function (data, curr, count) {
@@ -281,43 +281,70 @@
 
 
         // 事件监听
-        var active = {
-            reload: function() {
+        // var active = {
+        //     reload: function() {
+        //         var goodsname = $('#goodsname'),
+        //             providername=$('#providername');
+        //         timer1=setTimeout(function(){
+        //             table.reload('reloadTable', {
+        //                 page: {
+        //                     // 从第一页开始
+        //                     curr: 1
+        //                 },
+        //                 where: {
+        //                     goodsname: goodsname.val(),
+        //                     providername: providername.val()
+        //                 }
+        //             }, 'data');
+        //             console.log("刷新表格");
+        //             layer.close(index);
+        //         },1000);
+        //     }
+        // }
+
+        startGather = function() {
+            timer1 = setInterval(() => {
+                if (!$(window.frameElement.parentElement).hasClass('layui-show')) {
+                    if (timer1) {
+                        clearInterval(timer1)
+                    }
+                }
                 var goodsname = $('#goodsname'),
                     providername=$('#providername');
-                timer1=setTimeout(function(){
-                    table.reload('reloadTable', {
-                        page: {
-                            // 从第一页开始
-                            curr: 1
-                        },
-                        where: {
-                            goodsname: goodsname.val(),
-                            providername: providername.val()
-                        }
-                    }, 'data');
-                    console.log("刷新表格");
-                    layer.close(index);
-                },1000);
+                table.reload('reloadTable', {
+                    page: {
+                        curr: $(".layui-laypage-em").next().html() //当前页码值
+                    },
+                    where: {
+                        goodsname: goodsname.val(),
+                        providername: providername.val()
+                    }
+                }, 'data');
+            }, 2000)
+        }
+
+        stopGather = function() {
+            if (timer1) {
+                clearInterval(timer1)
             }
         }
-        timer2=setInterval(function(){
-            if (timer1!=null){
-                clearInterval(timer1);
-            }
-            var goodsname = $('#goodsname'),
-                providername=$('#providername');
-            table.reload('reloadTable', {
-                page: {
-                    curr: $(".layui-laypage-em").next().html() //当前页码值
-                },
-                where: {
-                    goodsname: goodsname.val(),
-                    providername: providername.val()
-                }
-            }, 'data');
-            console.log("刷新表格");
-        },2000);
+        // timer2=setInterval(function(){
+        //     if (timer1!=null){
+        //         clearInterval(timer1);
+        //     }
+        //     var goodsname = $('#goodsname'),
+        //         providername=$('#providername');
+        //     table.reload('reloadTable', {
+        //         page: {
+        //             curr: $(".layui-laypage-em").next().html() //当前页码值
+        //         },
+        //         where: {
+        //             goodsname: goodsname.val(),
+        //             providername: providername.val()
+        //         }
+        //     }, 'data');
+        //     console.log("刷新表格");
+        // },2000);
 
         $.get("/provider/loadAllProviderForSelect",function (res) {
             var data = res.data;
