@@ -4,18 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeqifu.bus.entity.GateWayBoard;
 import com.yeqifu.bus.entity.GoodsBoard;
 import com.yeqifu.bus.entity.iBeaconInfo;
+import com.yeqifu.bus.entity.iBeaconManage;
 import com.yeqifu.bus.mapper.iBeaconMapper;
 import com.yeqifu.bus.service.IiBeaconService;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -145,6 +144,17 @@ public class iBeaconServiceImpl extends ServiceImpl<iBeaconMapper, iBeaconInfo> 
     @Override
     public List<GateWayBoard> queryGateWay() {
         return iBeaconMapper.queryGateWayBoard();
+    }
+
+    @Override
+    public ArrayList<iBeaconManage> findAll() {
+        return iBeaconMapper.findAll();
+    }
+
+    @Override
+    public ArrayList<String> queryIBeRSSI(String mac) {
+
+        return iBeaconMapper.queryRssi();
     }
 }
 

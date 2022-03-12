@@ -16,6 +16,7 @@
     <link rel="stylesheet" th:href="@{/resources/css/public.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/resources/layui_ext/dtree/dtree.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/resources/layui_ext/dtree/font/dtreefont.css}" media="all"/>
+
     <style>
         input#search_provideridTree_select_input_id {
             border-radius: 10px;
@@ -58,67 +59,100 @@
             margin-top: 4px;
         }
     </style>
+
+    <script src="/resources/js/echart.js"></script>
+
+
 </head>
 <body>
 <!--查询条件-->
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 15px;">
-    <legend>搜索条件</legend>
+    <legend>出库区情况</legend>
 </fieldset>
-<form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">供应商名称</label>
-            <div class="layui-input-inline">
-                <select name="providerid" id="select_providerid">
-                    <option value="0">请选择供应商</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">商品名称</label>
-            <div class="layui-input-inline">
-                <select name="goodsid" id="select_goodsid">
-                    <option value="0">请选择商品</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">开始时间</label>
-            <div class="layui-input-inline">
-                <input type="text" name="startTime" id="startTime" readonly="readonly" placeholder="yyyy-MM-dd"
-                       class="layui-input input-radius">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">结束时间</label>
-            <div class="layui-input-inline">
-                <input type="text" name="endTime" id="endTime" readonly="readonly" placeholder="yyyy-MM-dd"
-                       class="layui-input input-radius">
-            </div>
-        </div>
+    <div id="main" style="width: 800px;height:450px;position: relative;left: 240px;top: 0px"></div>
+
+
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            grid: {
+                // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
+                left: 12, // 默认10%，给24就挺合适的。
+                right: 45,
+                top:26,
+                bottom: 52, // 默认60
+                // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
+
+                // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
+                // backgroundColor:'#ccac62',
+                // borderColor:"#000",
+                tooltip:{}, // 本坐标系特定的 tooltip 设定。(可以有多个grid)
+            },
+            xAxis: {
+                show:false,
+                scale: true,
+
+            },
+            yAxis: {
+                show:false,
+                scale: true,
+
+            },
+            series: [
+                {
+                    type: 'effectScatter',
+                    symbolSize: 15,
+                    data: [
+                        [10, 10],
+                        [150, 520],
+                        [100, 280],
+                        [1200, 800]
+
+                    ]
+                }
+            ],
+            graphic:[
+                {
+                    type: 'image', // 图形元素类型
+                    //id: 'logo', // 更新或删除图形元素时指定更新哪个图形元素，如果不需要用可以忽略。
+                    //right: 'center', // 根据父元素进行定位 （居中）
+                    //bottom: '0%', // 根据父元素进行定位   （0%）, 如果bottom的值是 0，也可以删除该bottom属性值。
+                    z: 0,  // 层叠
+                    bounding: 'all', // 决定此图形元素在定位时，对自身的包围盒计算方式
+                    style: {
+                        image:'https://video-guli-2020.oss-cn-beijing.aliyuncs.com/image/chuku.jpg', // 这里一定要注意、注意，必须是https开头的图片路径地址
+                        width: 800,
+                        height:400
+                    }
+                }
+            ]
+        };
+        chartOptions = {
+            backgroundColor: 'transparent'
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
     </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block" style="text-align: center;padding-right: 15%;">
-            <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter="doSearch"><i
-                    class="layui-icon layui-icon-search layui-icon-normal"></i>查询
-            </button>
-            <button type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
-                    class="layui-icon layui-icon-refresh"></i><span>重置</span>
-            </button>
-        </div>
-    </div>
-</form>
+
 
 <!--数据表格-->
 <div>
     <table class="layui-hide" id="outportTable" lay-filter="outportTable"></table>
     <div id="outportRowBar" style="display: none;">
-        <button type="button" lay-event="delete" shiro:hasPermission="outport:delete" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius"><i
-                class="layui-icon layui-icon-delete"></i>删除
+        <button type="button" lay-event="delete" shiro:hasPermission="outport:delete" class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius"><i
+                class="layui-icon layui-icon-normal"></i>确认出库
         </button>
+
     </div>
 </div>
+<div id="main" style="width: 600px;height:400px;"></div>
 
+</body>
 
 <script type="text/javascript" src="/resources/layui/layui.js"></script>
 
@@ -154,15 +188,13 @@
             height: "full-180",
             cols: [ [
                 {field: 'id', title: 'ID', align: 'center'},
-                {field: 'providername', title: '供应商', align: 'center',width:'130'},
+                {field: 'providername', title: '库区', align: 'center',width:'130'},
                 {field: 'goodsname', title: '商品名称', align: 'center',width:'150'},
                 {field: 'paytype', title: 'iBeacon标识', align: 'center',width:'90'},
                 {field: 'outputtime', title: '扫描时间', align: 'center',width:'170'},
                 {field: 'operateperson', title: '操作员', align: 'center',width:'130'},
-                {field: 'number', title: '退货数量', align: 'center',width:'100'},
-                {field: 'outportprice', title: '退货价格', align: 'center',width:'120'},
+                {field: 'outportprice', title: '出库价格', align: 'center',width:'120'},
                 {field: 'remark', title: '备注', align: 'center',width:'130'},
-                {field: 'size', title: '商品规格', align: 'center',width:'100'},
                 {fixed: 'right', title: '操作', toolbar: '#outportRowBar', align: 'center',width:'130'}
             ] ],
             done: function (data, curr, count) {
@@ -245,5 +277,4 @@
 
 </script>
 
-</body>
 </html>

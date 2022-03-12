@@ -89,6 +89,8 @@ public class iBeaconController {
 
         board.setOnlinegateway(6);
         board.setOfflinegateway(0);
+        board.setGoodsnum(18);
+        board.setPartition(8);
         ArrayList list = new ArrayList();
         list.add(board);
         page.setRecords(list);

@@ -33,4 +33,12 @@
     <select id="queryGateWayBoard"  resultType="com.yeqifu.bus.entity.GateWayBoard">
         select gateWayG1,date from gateway_board
     </select>
+
+    <select id="findAll"  resultType="com.yeqifu.bus.entity.iBeaconManage">
+        SELECT * FROM sys_ibe_manage ORDER BY id asc LIMIT 6
+    </select>
+
+    <select id="queryRssi" parameterType="java.lang.String" resultType="java.util.List">
+        SELECT rssi FROM bluerssi_form ORDER BY id asc LIMIT 6
+    </select>
 </mapper>
