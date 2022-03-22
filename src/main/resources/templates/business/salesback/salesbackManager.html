@@ -161,6 +161,93 @@
             type: 'datetime'
         })
 
+
+        //初始化echarts
+        var myEchart = echarts.init(document.getElementById('my-echart'));
+        var myOption =  {
+            // backgroundColor: '#000',
+            title: {
+                text: 'iBeacon信号强度'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Email', 'Union Ads'],
+                top: 25
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                show: false,
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                nameTextStyle: {
+                    fontWeight: 'bold'
+                },
+                axisTick: {
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                type: 'value',
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [
+                {
+                    name: 'Email',
+                    type: 'line',
+                    smooth: true,
+                    // stack: 'Total',
+                    data: [120, 132, 101, 134, 90, 230, 210],
+                    // areaStyle: {}
+                },
+                {
+                    name: 'Union Ads',
+                    type: 'line',
+                    smooth: true,
+                    // stack: 'Total',
+                    data: [220, 182, 191, 234, 290, 330, 310],
+                    // areaStyle: {}
+                }
+            ]
+        };
+        // myEchart.setOption(myOption);
+        myEchart.showLoading()
+
+        function setOption(data) {
+            myOption.legend.data = Object.keys(data)
+            const series = []
+            const xdata = []
+            for (let i = 1; i <= Object.keys(data).length; i++) {
+                xdata.push(i)
+            }
+            myOption.xAxis.data = xdata
+            Object.keys(data).forEach(key => {
+                series.push(
+                    {
+                        name:  key,
+                        type: 'line',
+
+                        // stack: 'Total',
+                        data: data[key].map(item => Number(item)),
+                        // areaStyle: {}
+                    }
+                )
+            })
+            myOption.series = series
+        }
+
         //初始化表格 加载数据
         tableIns = table.render({
             elem: "#salesbackTable",
@@ -168,7 +255,28 @@
             url: "/salesback/loadAlliBeacon",
             toolbar: true,
             page: true,
-            height: "full-180",
+            height: "400",
+            parseData: res => {
+                if (res.data.length) {
+                    var defaultEchartsData = res.data[0].ibeaconrssiBord
+                    setOption(defaultEchartsData)
+                }
+                myEchart.hideLoading()
+                myEchart.setOption(myOption);
+                const ibeaconManage = []
+                res.data.forEach(item => {
+                    ibeaconManage.push({
+                        ...item.ibeaconManage,
+                        echarts: item.ibeaconrssiBord
+                    })
+                })
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": ibeaconManage //解析数据列表
+                }
+            },
             cols: [ [
                 {field: 'id', title: 'ID', align: 'center'},
                 {field: 'ibeaconName', title: 'iBeacon名称', align: 'center',width:'130'},
@@ -178,7 +286,7 @@
                 {field: 'mac', title: 'mac地址', align: 'center',width:'130'},
                 {field: 'topic', title: '订阅话题', align: 'center',width:'100'},
                 {field: 'batter', title: '电量', align: 'center',width:'130'},
-                {fixed: 'right', title: '操作', toolbar: '#salesbackRowBar', align: 'center',width:'130'}
+                // {fixed: 'right', title: '操作', toolbar: '#salesbackRowBar', align: 'center',width:'130'}
             ] ],
             done: function (data, curr, count) {
                 //不是第一页时，如果当前返回的数据为0那么就返回上一页
@@ -192,79 +300,10 @@
             }
         });
 
-        //初始化echarts
-        var myEchart = echarts.init(document.getElementById('my-echart'));
-        var myOption =  {
-            backgroundColor: '#000',
-            title: {
-                text: 'iBeacon信号强度',
-                textStyle: {
-                    color: '#fff'
-                }
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data: ['Email', 'Union Ads'],
-                textStyle: {
-                    color: '#fff'
-                },
-                top: 20
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                nameTextStyle: {
-                    color: '#fff',
-                    fontWeight: 'bold'
-                },
-                axisTick: {
-                    show: false
-                },
-                splitLine: {
-                    show: false
-                }
-            },
-            yAxis: {
-                type: 'value',
-                nameTextStyle: {
-                    color: '#fff'
-                },
-                splitLine: {
-                    show: false
-                }
-            },
-            series: [
-                {
-                    name: 'Email',
-                    type: 'line',
-                    stack: 'Total',
-                    data: [120, 132, 101, 134, 90, 230, 210],
-                    // areaStyle: {}
-                },
-                {
-                    name: 'Union Ads',
-                    type: 'line',
-                    stack: 'Total',
-                    data: [220, 182, 191, 234, 290, 330, 310],
-                    // areaStyle: {}
-                }
-            ]
-        };
-        myEchart.setOption(myOption);
-
         //触发行单击事件
         table.on('row(salesbackTable)', function(obj){
-            console.log(obj.data) //得到当前行数据
-            console.log(myEchart)
+            setOption(obj.data.echarts)
+            myEchart.setOption(myOption)
             //obj.del(); //删除当前行
             //obj.update(fields) //修改当前行数据
         });
