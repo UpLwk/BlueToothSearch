@@ -40,9 +40,9 @@ public class ClientMQTT {
         clientMQTT.beaconService = beaconService;
     }
     //MQTT安装的服务器地址和端口号（本机的ip）
-    public static final String HOST = "tcp://192.168.0.105:1883";
+    public static final String HOST = "tcp://192.168.0.101:1883";
     //定义一个主题
-    public static final String TOPIC = "/gw/ac233fc07f66/status";
+    public static final String TOPIC = "/gw/location";
     //定义MQTT的ID，可以在MQTT服务配置中指定
     private static final String clientid = "client-2";
     private MqttClient client;
@@ -67,7 +67,7 @@ public class ClientMQTT {
             // MQTT的连接设置
             options = new MqttConnectOptions();
             // 设置是否清空session,这里如果设置为false表示服务器会保留客户端的连接记录，这里设置为true表示每次连接到服务器都以新的身份连接
-            options.setCleanSession(false);
+            options.setCleanSession(true);
             // 设置连接的用户名
             options.setUserName(userName);
             // 设置连接的密码
@@ -83,7 +83,7 @@ public class ClientMQTT {
 
             client.setCallback(blueRssiService);
             MqttTopic topic = client.getTopic(TOPIC);
-            int qos = 1;
+            int qos = 0;
 
             //setWill方法，如果项目中需要知道客户端是否掉线可以调用该方法。设置最终端口的通知消息
             options.setWill(topic, "alive...".getBytes(), qos, true);

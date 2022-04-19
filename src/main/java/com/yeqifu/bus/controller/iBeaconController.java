@@ -42,7 +42,6 @@ public class iBeaconController {
         IPage<iBeaconInfo> page = new Page<iBeaconInfo>(1,10);
         QueryWrapper<iBeaconInfo> queryWrapper = new QueryWrapper<iBeaconInfo>();
 
-
         List<iBeaconInfo> iBeaconInfos = iBeaconService.queryBlueRssiTop_10();
         page.setRecords(iBeaconInfos);
         page.setSize(iBeaconInfos.size());
@@ -55,6 +54,11 @@ public class iBeaconController {
         }
 
         return new DataGridView(page.getTotal(),page.getRecords());
+    }
+    @RequestMapping("scanibeacon")
+    public void test(iBeaconInfo ibeacon){
+        ClientMQTT clientMQTT = new ClientMQTT();
+        clientMQTT.searchBlueToothData();
     }
 
 

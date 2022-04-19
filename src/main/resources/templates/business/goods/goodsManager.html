@@ -37,7 +37,8 @@
             height: 30px;
             margin-top: 4px;
         }
-        #echart {
+        #echart,
+        #historyEchart {
             width: 680px;
             height: 370px;
         }
@@ -222,10 +223,14 @@
     <div class="layui-tab layui-tab-brief" lay-filter="rowModalTab">
         <ul class="layui-tab-title" style="text-align:center;">
             <li class="layui-this">销售情况</li>
+            <li>历史定位</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
                 <div id="echart"></div>
+            </div>
+            <div class="layui-tab-item">
+                <div id="historyEchart"></div>
             </div>
         </div>
     </div>
@@ -263,7 +268,7 @@
                 {field: 'price', title: '价格', align: 'center',width:'90'},
                 {field: 'number', title: '数量', align: 'center',width:'90'},
                 {field: 'dangernum', title: '库存预警值', align: 'center',width:'100'},
-               // {field: 'size', title: '规格', align: 'center',width:'120'},
+                // {field: 'size', title: '规格', align: 'center',width:'120'},
                 //{field: 'goodspackage', title: '包装', align: 'center',width:'120'},
                 {field: 'productcode', title: '所属topic', align: 'center',width:'130'},
                 {field: 'promitcode', title: 'iBeacon标识', align: 'center',width:'130'},
@@ -302,6 +307,60 @@
                 }
             ]
         };
+
+        var hisEc = echarts.init(document.getElementById('historyEchart'));
+        var hisOption = {
+            grid: {
+                // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
+                left: 40, // 默认10%，给24就挺合适的。
+                right: 0,
+                top: 10,
+                bottom: 5, // 默认60
+                // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
+
+                // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
+                // backgroundColor:'#ccac62',
+                // borderColor:"#000",
+                tooltip:{}, // 本坐标系特定的 tooltip 设定。(可以有多个grid)
+            },
+            xAxis: {
+                show: false,
+                scale: true,
+                data: [1,2,3,4,5,6,7]
+            },
+            yAxis: {
+                show: false,
+                scale: true,
+                type: 'value',
+                max: 270
+            },
+            series: [
+                {
+                    type: 'line',
+                    lineStyle: {
+                        type: "dashed"
+                    },
+                    symbolSize: 10,
+                    symbol: 'arrow',
+                    data: [220, 180, 160, 165, 155, 175]
+                }
+            ],
+            graphic:[
+                {
+                    type: 'image', // 图形元素类型
+                    //id: 'logo', // 更新或删除图形元素时指定更新哪个图形元素，如果不需要用可以忽略。
+                    //right: 'center', // 根据父元素进行定位 （居中）
+                    //bottom: '0%', // 根据父元素进行定位   （0%）, 如果bottom的值是 0，也可以删除该bottom属性值。
+                    z: 0,  // 层叠
+                    bounding: 'all', // 决定此图形元素在定位时，对自身的包围盒计算方式
+                    style: {
+                        image:'https://video-guli-2020.oss-cn-beijing.aliyuncs.com/image/419new.jpg', // 这里一定要注意、注意，必须是https开头的图片路径地址
+                        width: 600,
+                        height: 420
+                    }
+                }
+            ]
+        };
         //触发行单击事件
         table.on('row(goodsTable)', function(obj){
             console.log(obj)
@@ -312,7 +371,8 @@
                 title: obj.data.goodsname,
                 success:function () {
                     myOption.series[0].data = [Math.round(Math.random()*15), Math.round(Math.random()*15), Math.round(Math.random()*15), Math.round(Math.random()*15), Math.round(Math.random()*15), Math.round(Math.random()*15)];
-                    myEchart.setOption(myOption)
+                    myEchart.setOption(myOption);
+                    hisEc.setOption(hisOption)
                     // url="/goods/addGoods";
                     // $.get("/provider/loadAllProviderForSelect",function(res){
                     //     var data=res.data;
@@ -332,9 +392,17 @@
         });
 
         element.on('tab(rowModalTab)', function(data){
-            console.log(this); //当前Tab标题所在的原始DOM元素
-            console.log(data.index); //得到当前Tab的所在下标
-            console.log(data.elem); //得到当前的Tab大容器
+            const cur = $(data.elem[0].children[1])
+            if (data.index === 1) {
+                cur.hide()
+                var loading = layer.msg('正在加载', {icon: 16, shade: 0.3, time:0});
+                setTimeout(() => {
+                    layer.close(loading);
+                    cur.show()
+                }, 1000)
+            } else {
+                cur.show()
+            }
         });
 
         //初始化查询条件的下拉列表

@@ -57,7 +57,12 @@
             height: 30px;
             margin-top: 4px;
         }
+        .tip {
+            display: none;
+            margin-left: 10px;
+        }
     </style>
+    <script src="/resources/js/echart.js"></script>
 </head>
 <body>
 <!--查询条件-->
@@ -86,20 +91,99 @@
 
     </div>
     <div class="layui-form-item">
-      <!--  <div class="layui-input-block" style="text-align: center;padding-right: 15%;">-->
+        <!--  <div class="layui-input-block" style="text-align: center;padding-right: 15%;">-->
         <div class="layui-input-block"style="position:absolute;left:250px;">
             <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter="doSearch"><i
                     class="layui-icon layui-icon-search layui-icon-normal"></i>查询位置
             </button>
-            <button type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
+            <button id="reset" type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
                     class="layui-icon layui-icon-refresh"></i><span>重置</span>
             </button>
+            <div class="tip">货物：<span class="goods-name">xxx</span>定位结果为：<span class="goods-pos">(343,457)</span>，经修正货物位于货区：<span class="goods-area">1023</span>，货架：<span class="goods-j">2</span>号货架。</div>
         </div>
     </div>
-</form>s
+</form>
 
 <body>
-    <img src="/image/dingweiresult.jpg"; style="position:absolute;top:170px;left:10px;">
+
+<div id="main" style="width: 800px;height:450px;position: relative;left: 150px;top: 50px"></div>
+
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        grid: {
+            // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
+            left: 12, // 默认10%，给24就挺合适的。
+            right: 45,
+            top:26,
+            bottom: 52, // 默认60
+            // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
+
+            // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
+            // backgroundColor:'#ccac62',
+            // borderColor:"#000",
+            tooltip:{}, // 本坐标系特定的 tooltip 设定。(可以有多个grid)
+        },
+        xAxis: {
+            show:false,
+            scale: true,
+
+        },
+        yAxis: {
+            show:false,
+            scale: true,
+
+        },
+        series: [
+            {
+                type: 'effectScatter',
+                symbolSize: 15,
+                data: [
+                    {
+                        value: [10, 10],
+                        symbolSize: 0
+                    },
+                    {
+                        value: [150, 520]
+                    },
+                    {
+                        value: [450, 280]
+                    },
+                    {
+                        value: [1200, 800],
+                        symbolSize: 0
+                    }
+                ]
+            }
+        ],
+        graphic:[
+            {
+                type: 'image', // 图形元素类型
+                //id: 'logo', // 更新或删除图形元素时指定更新哪个图形元素，如果不需要用可以忽略。
+                //right: 'center', // 根据父元素进行定位 （居中）
+                //bottom: '0%', // 根据父元素进行定位   （0%）, 如果bottom的值是 0，也可以删除该bottom属性值。
+                z: 0,  // 层叠
+                bounding: 'all', // 决定此图形元素在定位时，对自身的包围盒计算方式
+                style: {
+                    image:'https://video-guli-2020.oss-cn-beijing.aliyuncs.com/image/419new.jpg', // 这里一定要注意、注意，必须是https开头的图片路径地址
+                    width: 600,
+                    height:420
+                }
+            }
+        ]
+    };
+    chartOptions = {
+        backgroundColor: 'transparent'
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+</div>
 </body>
 
 
@@ -161,7 +245,6 @@
         });
 
 
-
         //初始化供应商名称的下拉列表
         $.get("/provider/loadAllProviderForSelect",function (res) {
             var data = res.data;
@@ -175,9 +258,11 @@
             form.render("select");
         });
         //初始化商品名称的下拉列表
+        var goods_list;
         $.get("/goods/loadAllGoodsForSelect",function (res) {
             var data = res.data;
             var dom = $("#select_goodsid");
+            goods_list = res.data
             var html = '<option value="0">请选择货物</option>';
             $.each(data,function (index, item) {
                 html += '<option value="'+item.id+'">'+item.goodsname+'-['+item.size+']-'+'['+item.providername+']'+'</option>';
@@ -186,6 +271,27 @@
             //重新渲染下拉列表
             form.render("select");
         });
+
+
+
+        const goods_tip = $('.tip');
+        const goods_name = $('.goods-name');
+        const goods_area = $('.goods-area');
+        //监控模糊查询按钮事件
+        form.on("submit(doSearch)", function (data) {
+            const { field } = data
+            if (field.goodsid === '0') {
+                goods_tip.hide();
+            } else {
+                const good = goods_list.find(item => item.id === Number(field.goodsid))
+                goods_name.text(`${good.goodsname}-${good.size}-${good.providername}`)
+                goods_area.text(good.providername)
+                goods_tip.css('display', 'inline-block')
+            }
+        });
+        $('#reset').click(() => {
+            goods_tip.hide()
+        })
 
         //打开添加弹出层
         function openAddLayer() {

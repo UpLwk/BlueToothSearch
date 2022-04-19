@@ -454,14 +454,14 @@
 			const { gateWayBoards, goodslist } = data
 
 			// 处理gateway图表数据并赋值给图表
-			const gateLegend = ['gateWay']
+			const gateLegend = ['minew01']
 			const gateLegendSelected = {
-				'gateWay': true
+				'minew01': true
 			}
 			const gatexAxisData = gateWayBoards.map(item => item.date)
 			const gateSeries = [
 				{
-					name: 'gateWay',
+					name: 'minew01',
 					type: 'line',
 					stack: 'Total',
 					data: gateWayBoards.map(item => item.gateWayG1),
